@@ -1,7 +1,7 @@
 
 .slider-container {
 	width: 100vw;
-	height: 100vh;
+	height: 70vh;
 	position: relative;
 	overflow: hidden;
 	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -43,16 +43,14 @@
 	background-repeat: no-repeat;
 	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 	overflow: hidden;
-	filter: grayscale(1);
-}
-
-.slide:hover {
-	filter: grayscale(0);
 }
 
 .slide.active {
 	flex: 2.5;
-	filter: grayscale(0);
+}
+
+.slide.active::before {
+	background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 70%);
 }
 
 .slide::before {
@@ -62,7 +60,6 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 80%);
 }
 
 .slide-content {
@@ -87,7 +84,8 @@
 	position: absolute;
 	bottom: 30px;
 	left: 30px;
-	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: flex;
 }
 
 .slide.active .slide-number {
@@ -108,7 +106,7 @@
 	bottom: 100px;
 	left: 30px;
 	white-space: nowrap;
-	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slide.active .car-brand {

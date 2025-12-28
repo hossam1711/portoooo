@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export interface LogoItem {
   src: string;
@@ -29,16 +29,40 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
   fadeOut,
   ariaLabel,
 }) => {
-  if (logos.length === 0) return null;
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   // Duplicate logos to create seamless loop
   const duplicatedLogos = [...logos, ...logos];
 
-  // Calculate animation duration based on speed and total width
-  const totalWidth = duplicatedLogos.length * (logoHeight + gap); // Approximate, assuming square logos
-  const duration = totalWidth / speed;
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
 
-  const animationName = direction === 'left' ? 'scrollLeft' : 'scrollRight';
+    let animationId: number;
+    const scrollSpeed = direction === 'left' ? speed : -speed;
+
+    const animate = () => {
+      slider.scrollLeft += scrollSpeed;
+      if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth) {
+        slider.scrollLeft = 0;
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+
+    const startAnimation = () => {
+      animationId = requestAnimationFrame(animate);
+    };
+
+    // Start animation after a short delay to ensure page is loaded
+    const timeoutId = setTimeout(startAnimation, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(animationId);
+    };
+  }, [speed, direction]);
+
+  if (logos.length === 0) return null;
 
   return (
     <div
@@ -54,10 +78,10 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
       aria-label={ariaLabel}
     >
       <div
-        className={`flex items-center ${pauseOnHover ? 'hover:pause' : ''}`}
+        ref={sliderRef}
+        className={`flex items-center overflow-hidden ${pauseOnHover ? 'hover:pause' : ''}`}
         style={{
-          animation: `${animationName} ${duration}s linear infinite`,
-          width: `${totalWidth * 2}px`, // Ensure enough width
+          width: '100%',
         }}
       >
         {duplicatedLogos.map((logo, index) => (
@@ -75,27 +99,6 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
           />
         ))}
       </div>
-      <style jsx>{`
-        @keyframes scrollLeft {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        @keyframes scrollRight {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0);
-          }
-        }
-        .hover\\:pause:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   );
 };
