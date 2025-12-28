@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Accordion.css';
 
 const slidesData = [
@@ -79,7 +79,17 @@ const slidesData = [
 ];
 
 export default function ProjectsGrid() {
-  const [activeSlide, setActiveSlide] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [autoIndex, setAutoIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAutoIndex(prev => (prev + 1) % slidesData.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentActive = hoveredIndex !== null ? hoveredIndex : autoIndex;
 
   return (
     <div className="slider-container">
@@ -89,10 +99,10 @@ export default function ProjectsGrid() {
         {slidesData.map((slide, index) => (
           <div
             key={index}
-            className={`slide ${activeSlide === index ? 'active' : ''}`}
+            className={`slide ${currentActive === index ? 'active' : ''}`}
             style={{ backgroundImage: slide.backgroundImage }}
-            onMouseEnter={() => setActiveSlide(index)}
-            onMouseLeave={() => setActiveSlide(null)}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
           >
             <div className="slide-content">
               <div className="slide-number">{slide.number}</div>

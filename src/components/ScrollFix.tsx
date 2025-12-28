@@ -11,13 +11,13 @@ export default function ScrollFix() {
     // يرجع overflow الطبيعي
     document.body.style.overflow = "auto";
 
-    // يضمن أن الاسكرول يرجع لما الصفحة تاخد focus
+    //focus
     const handleFocus = () => {
       document.body.style.overflow = "auto";
     };
     window.addEventListener("focus", handleFocus);
 
-    // تنظيف Event Listener عند التفكيك
+    // Event Listener 
     return () => {
       window.removeEventListener("focus", handleFocus);
       document.body.style.overflow = "auto";

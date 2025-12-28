@@ -32,7 +32,10 @@ const categories = [
 
 export default function Technologies() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [isPaused, setIsPaused] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
 
   const filteredTechs =
     activeCategory === "All"
@@ -43,20 +46,33 @@ export default function Technologies() {
     const slider = sliderRef.current;
     if (!slider) return;
 
-    let animationId: number;
-    const speed = .4;
+    const speed = 1.5; // Increased speed for better visibility
+    let lastTime = performance.now();
 
-    const animate = () => {
-      slider!.scrollLeft += speed;
-      if (slider!.scrollLeft + slider!.clientWidth >= slider!.scrollWidth) {
-        slider!.scrollLeft = 0;
+    const animate = (currentTime: number) => {
+      if (!isPaused) {
+        const deltaTime = currentTime - lastTime;
+        const distance = (speed * deltaTime) / 16; // normalize to ~60fps
+        
+        slider.scrollLeft += distance;
+        
+        if (slider.scrollLeft >= slider.scrollWidth / 2) {
+          slider.scrollLeft = 0;
+        }
       }
-      animationId = requestAnimationFrame(animate);
+      
+      lastTime = currentTime;
+      animationRef.current = requestAnimationFrame(animate);
     };
 
-    animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [filteredTechs]);
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [filteredTechs, isPaused]);
 
   return (
     <section
@@ -91,24 +107,29 @@ export default function Technologies() {
           ))}
         </div>
 
-        {/* AUTO SLIDER */}
+        {/* AUTO SLIDER with pause on hover */}
         <div
           ref={sliderRef}
           className="overflow-x-hidden scroll-smooth"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <div className="flex flex-wrap gap-4 w-max pb-4">
-            {filteredTechs.concat(filteredTechs).map((tech, idx) => (
-              <div key={idx} className="w-32">
-                <div className="bg-slate-700/40 backdrop-blur-md rounded-xl p-4 border border-slate-600/50 hover:bg-slate-600/50 transition h-32">
-                  <div className="flex flex-col items-center space-y-2">
+          <div className="flex gap-4 w-max pb-4" style={{ width: 'fit-content' }}>
+            {/* Duplicate for seamless loop */}
+            {[...filteredTechs, ...filteredTechs].map((tech, idx) => (
+              <div key={idx} className="w-32 flex-shrink-0">
+                <div className="bg-slate-700/40 backdrop-blur-md rounded-xl p-4 border border-slate-600/50 hover:bg-slate-600/50 transition-colors duration-300 h-32">
+                  <div className="flex flex-col items-center justify-center h-full space-y-2">
                     <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
                       <img
                         src={tech.icon}
                         alt={tech.name}
-                        className="w-9 h-9"
+                        className="w-9 h-9 object-contain"
+                        loading="lazy"
                       />
                     </div>
-                    <span className="text-white text-xs font-medium text-center">
+                    <span className="text-white text-xs font-medium text-center line-clamp-2">
                       {tech.name}
                     </span>
                   </div>
@@ -118,10 +139,13 @@ export default function Technologies() {
           </div>
         </div>
 
-        {/* Stats */}
-        
+        {/* Pause indicator */}
+        {isPaused && (
+          <div className="text-center mt-4">
+            <span className="text-gray-400 text-sm">Paused - Move mouse away to resume</span>
+          </div>
+        )}
       </div>
     </section>
   );
 }
-

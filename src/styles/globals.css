@@ -31,5 +31,14 @@ body {
 	padding: 0;
 }
 i {
-	margin-right: 10px;
+ 	margin-right: 10px;
+}
+
+/* Hide scrollbar for technologies slider */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

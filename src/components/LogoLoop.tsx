@@ -43,7 +43,7 @@ const LogoLoop: React.FC<LogoLoopProps> = ({
 
     const animate = () => {
       slider.scrollLeft += scrollSpeed;
-      if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth) {
+      if (slider.scrollLeft >= slider.scrollWidth / 2) {
         slider.scrollLeft = 0;
       }
       animationId = requestAnimationFrame(animate);

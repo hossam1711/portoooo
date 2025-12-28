@@ -1,19 +1,26 @@
-import TextType from '../components/TextType';
-
 export default function Hero() {
   return (
-    <main className="relative flex min-h-screen w-full flex-col items-start justify-start pt-[35vh] px-5">
-      <div className="absolute inset-0" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(2px)' }}></div>
-      <div className="relative z-10 max-w-4xl w-full flex flex-col items-start gap-6 text-left text-5xl font-bold text-white font-sans">
-        <TextType
-          text={["Welcome to Dev Flow — where ideas become scalable digital solutions."]}
-          typingSpeed={75}
-          pauseDuration={2500}
-          showCursor={true}
-          cursorCharacter="|"
-        />
+    <section className="relative flex min-h-screen w-full items-center px-6 md:px-16">
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url(/heropic2.jpg)" }}
+      >
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
-    </main>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-3xl">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+          Build Digital Products <br />
+          <span className="text-indigo-400">That Scale</span>
+        </h1>
+
+        <p className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+          We transform ideas into high-performance web and mobile applications
+          using modern technologies and scalable architectures.
+        </p>
+      </div>
+    </section>
   );
 }
-
