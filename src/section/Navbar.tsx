@@ -2,23 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 
+import { menuItems } from '@/config/navbarData';
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectorStyle, setSelectorStyle] = useState({});
   const navRef = useRef<HTMLDivElement>(null);
 
-  const menuItems = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#" },
-    { name: " Our Team", href: "#" },
-    { name: "Services", href: "#" },
-    { name: "Technologies", href: "#technologies" },
-    { name: "Clients", href: "#" },
-    { name: "Careers", href: "#" },
-    { name: "Contact us", href: "#" },
-    { name: "Mobile App", href: "#" },
-  ];
 
   useEffect(() => {
     if (navRef.current && !isMenuOpen) {
@@ -36,13 +27,13 @@ export default function Navbar() {
   return (
     <nav className="w-full px-4 py-3">
       <div className="flex items-center justify-between bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 rounded-full shadow-lg px-6 py-4 relative h-16">
-        {/* Logo */}      {/* Logo */}
+        {/* Logo */}
         <a href="#" className="flex-shrink-0 z-10 -my-4 mr-4">
-          <img src="/logo2.svg" alt="Logo" className="w-15 h-15 filter brightness-0 invert" />
+          <img src="/logo2.svg" alt="Logo" className="w-[60px] h-[60px] filter brightness-0 invert" />
         </a>
-   
+
         <a href="#" className="flex-shrink-0 z-10 -my-4">
-          <img src="/q.svg" alt="Logo" className="w-50 h-50 filter brightness-0 invert " />
+          <img src="/q.svg" alt="Logo" className="w-[200px] h-[200px] filter brightness-0 invert " />
         </a>
         {/* Desktop Menu */}
         <div 
